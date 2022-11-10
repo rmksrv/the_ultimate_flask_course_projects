@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block nav_profile_class %}active{% endblock %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="text-center bold">My Profile</h3>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row pad">
+                        <div class="col-lg-12">
+                            <img src="{{ user.image }}" class="img-responsive img-circle center-block" alt="Image" style="height: 220px;" />
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <i class="glyphicon glyphicon-user"></i> NAME:
+                        <strong class="pull-right">{{ user.name }}</strong>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="glyphicon glyphicon-th"></i> Handle:
+                        <strong class="pull-right"><em>@{{ user.username }}</em></strong>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="glyphicon glyphicon-calendar"></i> MEMBER SINCE:
+                        <strong class="pull-right">{{ user.joined_at.strftime('%B %d, %Y') }}</strong>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="glyphicon glyphicon-th-list"></i> FOLLOWERS COUNT:
+                        <strong class="pull-right">{{ user.followers.all()|length }}</strong>
+                    </li>
+                    {% if user != current_user %}
+                        <li class="list-group-item">
+                            <i class="glyphicon glyphicon-plus"></i> 
+                            {% if user in current_user.following.all() %}
+                                FOLLOWED!
+                            {% else %}
+                                <a href="{{ url_for('follow', username=user.username) }}">FOLLOW USER</a>
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4><strong>Activity</strong></h4>
+                    <div role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#tweets" aria-controls="tweets" role="tab" data-toggle="tab">Tweets &amp; Replies</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#followings" aria-controls="followings" role="tab" data-toggle="tab">Followers</a>
+                            </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="tweets">
+                                {% for tweet in tweets %}
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="row pad">
+                                                <div class="col-lg-2">
+                                                    <img src="{{ tweet.author.image }}" class="img-circle" style="width: 60px; height: 60px;" />
+                                                </div>
+                                                <div class="col-lg-10">
+                                                    <div>
+                                                        <strong class="mid">{{ tweet.author.name }}</strong>
+                                                        <a href="{{ url_for('profile', username=tweet.author.username) }}">
+                                                            <small><em>@{{ tweet.author.username }}</em></small>  
+                                                        </a>
+                                                        {{ (current_time - tweet.created_at)|time_since }}
+                                                    </div>
+                                                    <div class="pad">
+                                                        {{tweet.text}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <hr>
+                                <a href={{ url_for('timeline', username=user.username) }}>More</a>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="followings">
+                                {% for follower in user.followers.all() %}
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="row pad">
+                                                <div class="col-lg-2">
+                                                    <img src="{{ follower.image }}" class="img-circle" style="width: 60px; height: 60px;" />
+                                                </div>
+                                                <div class="col-lg-10">
+                                                    <div>
+                                                        <strong class="mid">{{ follower.name }}</strong>
+                                                        <a href="{{ url_for('profile', username=follower.username) }}">
+                                                            <small><em>@{{ follower.username }}</em></small>
+                                                        </a>
+                                                    </div>
+                                                    <div class="row pad">
+                                                        <hr />
+                                                        <div class="col-lg-12">
+                                                            <i class="glyphicon glyphicon-th-list"></i> 
+                                                            {{ follower.followers.all()|length }}
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Who To Watch</h3>
+                </div>
+                <ul class="list-group">
+                    {% for suggested_user in who_to_watch %}
+                        <li class="list-group-item">
+                            {{ suggested_user.name }}
+                            <div>
+                                <a href="{{ url_for('profile', username=suggested_user.username) }}">
+                                    <strong>@{{ suggested_user.username }}</strong>
+                                </a>
+                                <span class="pull-right">
+                                    {{ suggested_user.followers.all()|length }} Followers
+                                </span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
