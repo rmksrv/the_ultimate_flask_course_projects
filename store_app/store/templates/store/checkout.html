@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout | Trendy Fashion Store{% endblock %}
+
+
+{% macro shipping_information_block() %}
+    <div class="col-lg-8">
+        <h3 class="bold">
+            <i class="glyphicon glyphicon-pencil"></i> Shipping Information
+        </h3>
+
+        <div class="panel panel-primary">
+            <form method="post" action="{{ url_for('store.checkout') }}">
+                <div class="panel-body">
+                    <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="bold">Personal Information</h4>
+                    </div>
+
+                    {{ submit_new_order_form.csrf_token }}
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Title</label>
+                            {{ submit_new_order_form.reference(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            <label>Firstname</label>
+                            {{ submit_new_order_form.first_name(class="form-control", value="", placeholder="Your firstname") }}
+                        </div>
+                        <div class="form-group">
+                            <label>Lastname</label>
+                            {{ submit_new_order_form.last_name(class="form-control", value="", placeholder="Your lastname") }}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            {{ submit_new_order_form.phone_number(class="form-control", value="", placeholder="Your phone number") }}
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            {{ submit_new_order_form.email(class="form-control", value="", placeholder="Your email") }}
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="bold">Address</h4>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Address</label>
+                            {{ submit_new_order_form.address(class="form-control", value="", placeholder="Your address") }}
+                        </div>
+                        <div class="form-group">
+                            <label>City</label>
+                            {{ submit_new_order_form.city(class="form-control", value="", placeholder="Your city") }}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>State</label>
+                            {{ submit_new_order_form.state(class="form-control", value="", placeholder="Your state") }}
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            {{ submit_new_order_form.country(class="form-control", value="", placeholder="Your country") }}
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="bold">Shipping Method</h4>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Shipping Method</label>
+                            {{ submit_new_order_form.shipping_type(class="form-control") }}
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="bold">Payment</h4>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Payment Option</label>
+                            {{ submit_new_order_form.payment_type(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="">
+                                    {{ submit_new_order_form.agree_with_tos() }}
+                                    I agree to the terms of service.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        Submit My Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% block body %}
+    <div class="row">
+        {{ shipping_information_block() }}
+
+	<div class="col-lg-4">
+		<h3 class="bold">
+			<i class="glyphicon glyphicon-th-list"></i> Cart Details
+		</h3>
+
+		<div class="panel panel-primary">
+			<div class="panel-body">
+				Current Cart Value
+			</div>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<p>
+						{{ cart|length }} Items <strong class="pull-right">&dollar;{{ cart.total_price }}</strong>
+					</p>
+					<p>
+						24hr Shipping <strong class="pull-right">&dollar;10</strong>
+					</p>
+				</li>
+				<li class="list-group-item">
+					<p>Total <strong class="pull-right">&dollar;{{ cart.total_price + shipping.price }}</strong></p>
+					<p>Taxes <strong class="pull-right">&dollar;0.00</strong></p>
+				</li>
+			</ul>
+		</div>
+
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Benefits</h3>
+			</div>
+			<div class="panel-body">
+				Some of the benefits of shopping with us include:
+			</div>
+			<ul class="list-group">
+				<li class="list-group-item">Buyer Protection</li>
+				<li class="list-group-item">Next Day Delivery</li>
+				<li class="list-group-item">Flexible Payment Options</li>
+				<li class="list-group-item">7day Money Back Guarantee</li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% macro carousel_banner() %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="carousel-id" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-id" data-slide-to="0" class=""></li>
+                    <li data-target="#carousel-id" data-slide-to="1" class=""></li>
+                </ol>
+                <div class="carousel-inner">
+                    {% call _carousel_item("Amazing Autumn Wears", image=url_for('static', filename='imgs/1.jpg'), is_active=True) %}
+                        Get the most trendy outfits to go with the season 
+                    {% endcall %}
+                    {% call _carousel_item("Amazing Autumn Wears", image=url_for('static', filename='imgs/2.jpg')) %}
+                        Get the most trendy outfits to go with the season 
+                    {% endcall %}
+                </div>
+                <a class="left carousel-control" href="#carousel-id" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                <a class="right carousel-control" href="#carousel-id" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro _carousel_item(header, image, is_active=False) %}
+    {% if is_active %}
+        {% set outer_class = "item active" %}
+    {% else %}
+        {% set outer_class = "item" %}
+    {% endif %}
+    <div class="{{ outer_class }}" style="height: 300px;">
+        <img alt="First slide" src="{{ image }}" style="width: 100%;">
+        <div class="container">
+            <div class="carousel-caption">
+                <h1>{{ header }}</h1>
+                <p>{{ caller() }}</p>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

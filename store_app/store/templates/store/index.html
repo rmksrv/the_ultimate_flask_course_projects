@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "store/components/common.html" as common %}
+{% from "store/components/carousel.html" import carousel_banner %}
+{% from "store/components/items.html" import items %}
+
+
+{% block title %}Home | Trendy Fashion Store{% endblock %}
+
+{% block body %}
+    {{ carousel_banner() }}
+
+    {{ items("Available Products", available_products) }}
+    {{ items("Out of Stock", out_of_stock_products) }}
+
+    {% call common.centered_text_block() %}
+        <p>At <strong><em>Trendy Fashion Store</em></strong>, we offer 24 hours service.</p>
+        <p>We offer 7-day money back gurantee and we take buyer protection seriously.</p>
+        <p>All our products are of the highest grade.</p>
+    {% endcall %}
+
+{% endblock %}

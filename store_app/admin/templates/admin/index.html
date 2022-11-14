@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | Trendy Fashion Store{% endblock %}
+
+{% macro available_products_table(available_products) %}
+	<div class="col-lg-6 pad">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Available Products</h3>
+            </div>
+            <div class="panel-body">
+                Products available in the products catalog
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th><th>Name</th><th>Price</th><th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in available_products %}
+                            <tr>
+                                <td>{{ product.id }}</td>
+                                <td>{{ product.name }}</td>
+                                <td>&dollar;{{ product.price }}</td>
+                                <td>{{ product.stock }} units</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro pending_orders_table() %}
+    <div class="col-lg-6 pad">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">Pending Orders</h3>
+            </div>
+            <div class="panel-body">
+                Orders that have not been fully completed
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>REF</th><th>Customer</th><th>Total</th><th>Status</th>
+                        </tr>
+                    </thead>
+                    {% for order in unfinished_orders %}
+                        <tbody>
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td><a href="{{ url_for('admin.order', id=order.id) }}">{{ order.id }}</a></td>
+                            <td>{{ order.first_name }} {{ order.last_name }}</td>
+                            <td>&dollar;{{ order.total_price }}</td>
+                            <td><span class="badge">{{ order.status.value }}</span></td>
+                        </tr>
+                        </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro summary_block(available_products, out_of_stock_products) %}
+    <div class="col-lg-12">
+        <ul class="summary">
+            <li class="">Pending Orders <span class="badge">{{ unfinished_orders|length }}</span></li>
+            <li class="">Completed Orders <span class="badge">{{ finished_orders|length }}</span></li>
+            <li class="">Products In Stock <span class="badge">{{ available_products|length }}</span></li>
+            <li class="">Products Out of Stock <span class="badge">{{ out_of_stock_products|length }}</span></li>
+            <li class="">Total Products <span class="badge">{{ available_products|length + out_of_stock_products|length }}</span></li>
+        </ul>
+    </div>
+{% endmacro %}
+
+
+{% macro header_block(title) %}
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <h3 class="bold"><i class="glyphicon glyphicon-dashboard"></i> {{ title }}</h3>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% block body %}
+    <div class="row pad">
+        {{ header_block("Admin Dashboard") }}
+        {{ summary_block(available_products, out_of_stock_products) }}
+    </div>
+    <div class="row pad">
+        {{ pending_orders_table() }}
+        {{ available_products_table(available_products) }}
+    </div>
+{% endblock %}
